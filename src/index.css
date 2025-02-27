@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg_img{
+    background-image: url(/ai6.jpg);
+    background-size: cover;
+    background-position-x:center;
+}
+
