@@ -1,26 +1,77 @@
 import React, { useState } from 'react'
+
 const App = () => {
   const [commands,setCommands] = useState(true)
   const[texts,setTexts]= useState("")
   const[response,setResponse] = useState("")
   const[isListening,setIsListening] = useState(false)
+  const assistantName = "Alexia"; // Assistant name
+  const developerName = "Arpit ji"
 
 
 
   const speak = (order,callback)=>{
     const utterance = new SpeechSynthesisUtterance(order)
     utterance.volume = 1; // Set volume (0 to 1, default is 1)
-    utterance.rate = 1; // Normal speed
+    utterance.rate = 0.9; // Normal speed
     utterance.pitch = 1; // Normal pitch
-    window.speechSynthesis.speak(utterance)
+    
+    window.speechSynthesis.cancel();
+    utterance.text = order.replace(/,/g, '.');
+
+    window.speechSynthesis.speak(utterance);
 
     utterance.onend = ()=>{
-      if(callback) callback()
+      //if(callback) callback()
+      setTimeout(() => {
+        if (callback) callback();
+      }, 500  );
     }
   }
-
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning!';
+    if (hour < 18) return 'Good Afternoon!';
+    return 'Good Evening!';
+  };
+ 
+  
+// for Chatbot API......
+  const fetchAIResponse = async (question) => {
+    try {
+      const apiURL = "https://open-ai-chatgpt.p.rapidapi.com/ask";
+      const response = await fetch(apiURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Rapidapi-Key": "f666f11fedmshd3ecfdc09bf2407p1b3d20jsn4de91a82818a",
+          "X-Rapidapi-Host": "open-ai-chatgpt.p.rapidapi.com",
+        },
+        body: JSON.stringify({
+          query: question,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("API Error");
+      }
+  
+      const data = await response.json();
+      const message = data.response || "Sorry, I couldn't understand that.";
+  
+      speak(message);
+      setResponse(message);
+      console.log("AI Response: ", message);
+    } catch (error) {
+      speak("Sorry, I'm unable to process that.");
+      setResponse("AI couldn't generate the answer.");
+      console.log("API Error: ", error);
+    }
+  };
+  
+// for Weaather API
   const fetchWeather = async (city)=>{
-    const API_KEY = 'YOUR_API_KEY';
+    const API_KEY = '7acc0e6badd3bcbffdd7b51ba4b9d272';
     // const city1='';
    await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`)
     .then((response) => response.json())
@@ -46,6 +97,20 @@ const App = () => {
       let city = command.replace("weather in","").trim()
         fetchWeather(city)
     }
+    // Asking for developer name.....
+    else if (command.includes("who is your developer")) {
+      message = `Only ${developerName} is my creator `;
+      speak(message);
+      setResponse(message +"🔥");
+    }
+
+    //for Calling her by name
+    else if(command.includes(assistantName.toLowerCase())){
+      message = `Yes ${assistantName} is Listening!..How i assist you ?`;
+      speak(message);
+      setResponse(message);
+    }
+    
     //for opening whatsapp...
     else if(command.includes("open whatsapp")){
       message = "Opening Whatsapp.."
@@ -122,11 +187,16 @@ const App = () => {
       window.open("https://x.com","_blank")
     }
     //for searching through google....
-    else{
-      message = `Searching google for...${command}`
-      speak(message)
-      setResponse(message)
-      window.open(`https://www.google.com/search?q=${encodeURIComponent(command)}`)
+    // else{
+    //   message = `Searching google for...${command}`
+    //   speak(message)
+    //   setResponse(message)
+    //   window.open(`https://www.google.com/search?q=${encodeURIComponent(command)}`)
+    // }
+
+    else {
+      speak("Let me think...");
+      fetchAIResponse(command);
     }
 
 }
@@ -153,9 +223,14 @@ const App = () => {
     recognition.start()
     
   }
+  const stopListening = () => {
+    window.speechSynthesis.cancel();
+    setIsListening(false);
+    speak('Listening stopped');
+  };
 
   const handleClick = ()=>{
-    speak("Listening... Please give me a command", startListening)
+    speak(`${getGreeting()}your personal Assistant is here..How may i help u ?`, startListening)
     
   }
 
@@ -179,9 +254,13 @@ const App = () => {
             <span className="absolute inset-0 rounded-lg border-2 border-transparent animate-glow"></span>
       
         </button>
+        {isListening && (
+          <button onClick={stopListening} className='px-4 py-2 bg-red-600 text-white rounded-lg mt-4'>
+            Stop Listening
+          </button>
+        )}
 
-
-        <div className='rbg-gray-800 p-5 md:p-6 shadow-2xl rounded-lg h-auto max-w-md w-full mt-6 space-y-4 text-white"'>
+        <div className='rbg-gray-800 p-5 md:p-6 shadow-2xl rounded-lg h-auto max-w-md w-full mt-6 space-y-4 text-white scrollbar-hide'>
           <h2 className='text-md text-white'>
             <span className='text-sky-800 text-xl font-bold'>Recognition Speech :</span>
             <br />
@@ -215,6 +294,14 @@ const App = () => {
           .animate-wave {
             animation: wave 1s infinite ease-in-out;
           }
+
+          .scrollbar-hide::-webkit-scrollbar {
+          display: none; /* Hide scrollbar for Chrome, Safari */
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+          }
         `}
       </style>
 
@@ -222,6 +309,7 @@ const App = () => {
 
     </div>
   )
+
 }
 
 export default App
