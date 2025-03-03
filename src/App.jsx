@@ -5,7 +5,7 @@ const App = () => {
   const[texts,setTexts]= useState("")
   const[response,setResponse] = useState("")
   const[isListening,setIsListening] = useState(false)
-  const assistantName = "Alexia"; // Assistant name
+  const assistantName = "Modern AI"; // Assistant name
   const developerName = "Arpit ji"
 
 
@@ -25,7 +25,7 @@ const App = () => {
       //if(callback) callback()
       setTimeout(() => {
         if (callback) callback();
-      }, 500  );
+      }, 500 );
     }
   }
   const getGreeting = () => {
@@ -217,7 +217,7 @@ const App = () => {
       handleCommands(text)
       setTimeout(()=>{
         setIsListening(false);
-      }, 1000)
+      }, 500)
     }
      setIsListening(true)
     recognition.start()
@@ -230,7 +230,7 @@ const App = () => {
   };
 
   const handleClick = ()=>{
-    speak(`${getGreeting()}your personal Assistant is here..How may i help u ?`, startListening)
+    speak(`${getGreeting()}your personal Assistant is here. ?`, startListening)
     
   }
 
