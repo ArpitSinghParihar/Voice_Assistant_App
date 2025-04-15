@@ -5,15 +5,16 @@ const App = () => {
   const[texts,setTexts]= useState("")
   const[response,setResponse] = useState("")
   const[isListening,setIsListening] = useState(false)
-  const assistantName = "Modern AI"; // Assistant name
-  const developerName = "Arpit ji"
-
-
+  const assistantName = "Lisa"; // Assistant name
+  const developerName = "Arpit & team"
+  const apikey = import.meta.env.VITE_RAPIDAPI_KEY;
+  const host = import.meta.env.VITE_RAPIDAPI_HOST;
+  
 
   const speak = (order,callback)=>{
     const utterance = new SpeechSynthesisUtterance(order)
     utterance.volume = 1; // Set volume (0 to 1, default is 1)
-    utterance.rate = 0.9; // Normal speed
+    utterance.rate = 1; // Normal speed
     utterance.pitch = 1; // Normal pitch
     
     window.speechSynthesis.cancel();
@@ -37,37 +38,45 @@ const App = () => {
  
   
 // for Chatbot API......
-  const fetchAIResponse = async (question) => {
-    try {
-      const apiURL = "https://open-ai-chatgpt.p.rapidapi.com/ask";
-      const response = await fetch(apiURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Rapidapi-Key": "f666f11fedmshd3ecfdc09bf2407p1b3d20jsn4de91a82818a",
-          "X-Rapidapi-Host": "open-ai-chatgpt.p.rapidapi.com",
-        },
-        body: JSON.stringify({
-          query: question,
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("API Error");
-      }
-  
-      const data = await response.json();
-      const message = data.response || "Sorry, I couldn't understand that.";
-  
-      speak(message);
-      setResponse(message);
-      console.log("AI Response: ", message);
-    } catch (error) {
-      speak("Sorry, I'm unable to process that.");
-      setResponse("AI couldn't generate the answer.");
-      console.log("API Error: ", error);
-    }
-  };
+
+const fetchAIResponse = async (question) => {
+  try {
+    const url = 'https://open-ai21.p.rapidapi.com/conversationllama';
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-rapidapi-key': apikey,
+        'x-rapidapi-host': host,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: 'user',
+            content: question
+          }
+        ],
+        web_access: false
+      })
+    };
+
+    const response = await fetch(url, options);
+    if (!response.ok) throw new Error("API Error");
+
+    const result = await response.json();
+    const reply = result?.result || "Sorry, I couldn't understand that.";
+
+    console.log("AI Response:", reply);
+    speak(reply);
+    setResponse(reply);
+  } catch (error) {
+    console.error("AI Error:", error);
+    const failMessage = "Sorry, I'm having trouble processing that.";
+    speak(failMessage);
+    setResponse(failMessage);
+  }
+};
+
   
 // for Weaather API
   const fetchWeather = async (city)=>{
@@ -98,12 +107,17 @@ const App = () => {
         fetchWeather(city)
     }
     // Asking for developer name.....
-    else if (command.includes("who is your developer")) {
+    else if (command.includes("who is your developer") || command.includes("Aapko kisne banaya hai")) {
       message = `Only ${developerName} is my creator `;
       speak(message);
       setResponse(message +"🔥");
     }
 
+    else if(command.includes("What is your name") || command.includes("aapka naam kya hai")){
+      message = `yes my name is ${assistantName}`
+      speak(message);
+      setResponse(message);
+    }
     //for Calling her by name
     else if(command.includes(assistantName.toLowerCase())){
       message = `Yes ${assistantName} is Listening!..How i assist you ?`;
@@ -186,6 +200,12 @@ const App = () => {
       setResponse(message)
       window.open("https://x.com","_blank")
     }
+    
+    else {
+      speak("Lisa is thinking...");
+      fetchAIResponse(command);
+    }
+
     //for searching through google....
     // else{
     //   message = `Searching google for...${command}`
@@ -194,10 +214,6 @@ const App = () => {
     //   window.open(`https://www.google.com/search?q=${encodeURIComponent(command)}`)
     // }
 
-    else {
-      speak("Let me think...");
-      fetchAIResponse(command);
-    }
 
 }
 
@@ -238,7 +254,7 @@ const App = () => {
     <div className='w-screen h-screen bg_img flex items-center justify-center'>
 
       <div className='flex items-center justify-center flex-col gap-6 mr-80'>
-        <h1 className='text-teal-400 font-bold text-6xl  '>Voice Assistant</h1>
+        <h1 className='text-teal-400 font-bold text-6xl  '>Campus Buddy</h1>
         <p className='text-md font-semibold text-emerald-300'>{
           commands?"Please give me a command..!":"Processing your commands..."
           }</p>
