@@ -251,9 +251,17 @@ const fetchAIResponse = async (question) => {
   }
 
   return (
-    <div className='w-screen h-screen bg_img flex items-center justify-center'>
+    // <div className='w-screen h-screen bg_img flex items-center justify-center'>
 
-      <div className='flex items-center justify-center flex-col gap-6 mr-80'>
+    //   <div className='flex items-center justify-center flex-col gap-6 mr-80'>
+    <div className='w-screen h-screen bg_img relative flex items-center justify-center px-4'>
+
+  {/* Dim overlay for better contrast */}
+  <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"></div>
+
+  {/* Actual content container */}
+  <div className='relative z-10 flex items-center justify-center flex-col gap-6 md:mr-80 text-center w-full max-w-2xl'>
+  
         <h1 className='text-teal-400 font-bold text-6xl  '>Campus Buddy</h1>
         <p className='text-md font-semibold text-emerald-300'>{
           commands?"Please give me a command..!":"Processing your commands..."
