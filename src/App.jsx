@@ -5,7 +5,7 @@ const App = () => {
   const[texts,setTexts]= useState("")
   const[response,setResponse] = useState("")
   const[isListening,setIsListening] = useState(false)
-  const assistantName = "Lisa"; // Assistant name
+  const assistantName = "CampusBuddy"; // Assistant name
   const developerName = "Arpit & team"
   const apikey = import.meta.env.VITE_RAPIDAPI_KEY;
   const host = import.meta.env.VITE_RAPIDAPI_HOST;
@@ -38,7 +38,6 @@ const App = () => {
  
   
 // for Chatbot API......
-
 const fetchAIResponse = async (question) => {
   try {
     const url = 'https://open-ai21.p.rapidapi.com/conversationllama';
@@ -77,7 +76,6 @@ const fetchAIResponse = async (question) => {
   }
 };
 
-  
 // for Weaather API
   const fetchWeather = async (city)=>{
     const API_KEY = '7acc0e6badd3bcbffdd7b51ba4b9d272';
@@ -96,7 +94,6 @@ const fetchAIResponse = async (question) => {
       speak("I couldn't fetch the weather. Please check the city name.");
     });
   };
-
 
   const handleCommands = (command)=>{
    let message ="";
@@ -201,8 +198,29 @@ const fetchAIResponse = async (question) => {
       window.open("https://x.com","_blank")
     }
     
+    else if(command.includes("go to the about page")||command.includes("about page")){
+      message = "Taking you to the about page.."
+      speak(message)
+      setResponse(message)
+      window.parent.location.href = "/about";
+    }
+
+    else if(command.includes("login")||command.includes("open login page")){
+      message("Taking you to the login page...")  
+      speak(message)
+      setResponse(message)
+      window.parent.location.href = "/login";
+
+    }
+
+    else if(command.includes("go to the feature section")||command.includes("feature section")){
+      message = "Taking you to the feature section.."
+      speak(message)
+      setResponse(message)
+      window.parent.location.href = "/feature";
+    }
     else {
-      speak("Lisa is thinking...");
+      speak("CampusBuddy is thinking...");
       fetchAIResponse(command);
     }
 
@@ -256,10 +274,10 @@ const fetchAIResponse = async (question) => {
     //   <div className='flex items-center justify-center flex-col gap-6 mr-80'>
     <div className='w-screen h-screen bg_img relative flex items-center justify-center px-4'>
 
-  {/* Dim overlay for better contrast */}
+  {/* Dim overlay*/}
   <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"></div>
 
-  {/* Actual content container */}
+  {/* content container */}
   <div className='relative z-10 flex items-center justify-center flex-col gap-6 md:mr-80 text-center w-full max-w-2xl'>
   
         <h1 className='text-teal-400 font-bold text-6xl  '>Campus Buddy</h1>
