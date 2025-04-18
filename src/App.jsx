@@ -38,43 +38,43 @@ const App = () => {
  
   
 // for Chatbot API......
-const fetchAIResponse = async (question) => {
-  try {
-    const url = 'https://open-ai21.p.rapidapi.com/conversationllama';
-    const options = {
-      method: 'POST',
-      headers: {
-        'x-rapidapi-key': apikey,
-        'x-rapidapi-host': host,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        messages: [
-          {
-            role: 'user',
-            content: question
-          }
-        ],
-        web_access: false
-      })
-    };
+// const fetchAIResponse = async (question) => {
+//   try {
+//     const url = 'https://open-ai21.p.rapidapi.com/conversationllama';
+//     const options = {
+//       method: 'POST',
+//       headers: {
+//         'x-rapidapi-key': apikey,
+//         'x-rapidapi-host': host,
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         messages: [
+//           {
+//             role: 'user',
+//             content: question
+//           }
+//         ],
+//         web_access: false
+//       })
+//     };
 
-    const response = await fetch(url, options);
-    if (!response.ok) throw new Error("API Error");
+//     const response = await fetch(url, options);
+//     if (!response.ok) throw new Error("API Error");
 
-    const result = await response.json();
-    const reply = result?.result || "Sorry, I couldn't understand that.";
+//     const result = await response.json();
+//     const reply = result?.result || "Sorry, I couldn't understand that.";
 
-    console.log("AI Response:", reply);
-    speak(reply);
-    setResponse(reply);
-  } catch (error) {
-    console.error("AI Error:", error);
-    const failMessage = "Sorry, I'm having trouble processing that.";
-    speak(failMessage);
-    setResponse(failMessage);
-  }
-};
+//     console.log("AI Response:", reply);
+//     speak(reply);
+//     setResponse(reply);
+//   } catch (error) {
+//     console.error("AI Error:", error);
+//     const failMessage = "Sorry, I'm having trouble processing that.";
+//     speak(failMessage);
+//     setResponse(failMessage);
+//   }
+// };
 
 // for Weaather API
   const fetchWeather = async (city)=>{
@@ -220,7 +220,7 @@ const fetchAIResponse = async (question) => {
       window.parent.location.href = "/feature";
     }
     else {
-      speak("CampusBuddy is thinking...");
+      speak("Lisa is thinking...");
       fetchAIResponse(command);
     }
 
