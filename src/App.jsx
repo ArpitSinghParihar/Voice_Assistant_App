@@ -198,31 +198,12 @@ const App = () => {
       window.open("https://x.com","_blank")
     }
     
-    else if(command.includes("go to the about page")||command.includes("about page")){
-      message = "Taking you to the about page.."
-      speak(message)
-      setResponse(message)
-      window.parent.location.href = "/about";
-    }
-
-    else if(command.includes("login")||command.includes("open login page")){
-      message("Taking you to the login page...")  
-      speak(message)
-      setResponse(message)
-      window.parent.location.href = "/login";
-
-    }
-
-    else if(command.includes("go to the feature section")||command.includes("feature section")){
-      message = "Taking you to the feature section.."
-      speak(message)
-      setResponse(message)
-      window.parent.location.href = "/feature";
-    }
+    
     else {
       speak("Lisa is thinking...");
       fetchAIResponse(command);
     }
+    window.parent.postMessage({ command: "scrollToPricing" }, "*");
 
     //for searching through google....
     // else{
