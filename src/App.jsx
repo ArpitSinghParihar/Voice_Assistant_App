@@ -198,17 +198,23 @@ const App = () => {
       window.open("https://x.com","_blank")
     }
     
-    
-    else  {
-    window.parent.postMessage({ command: "scroll to pricing" }, "*");
+    else if (command.toLowerCase().includes("pricing")) {
+      const target = document.getElementById("Pricing");
+      if (target) {
+        speak("Scrolling to Pricing section.", () => {
+          target.scrollIntoView({ behavior: "smooth" });
+        });
+        setResponse("Navigated to the Pricing section.");
+      } else {
+        speak("Sorry, I couldn't find the Pricing section.");
+        setResponse("Pricing section not found.");
+      }
     }
-    //for searching through google....
-    // else{
-    //   message = `Searching google for...${command}`
-    //   speak(message)
-    //   setResponse(message)
-    //   window.open(`https://www.google.com/search?q=${encodeURIComponent(command)}`)
+    
+    // else  {
+    // window.parent.postMessage({ command: "scroll to pricing" }, "*");
     // }
+   
 
 
 }
