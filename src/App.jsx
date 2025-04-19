@@ -199,12 +199,12 @@ const App = () => {
     }
     
     
-    else {
-      speak("Lisa is thinking...");
-      fetchAIResponse(command);
-    }
+    else  {
+    //   speak("Lisa is thinking...");
+    //   fetchAIResponse(command);
+    // }
     window.parent.postMessage({ command: "scrollToPricing" }, "*");
-
+    }
     //for searching through google....
     // else{
     //   message = `Searching google for...${command}`
