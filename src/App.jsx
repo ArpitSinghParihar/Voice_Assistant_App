@@ -200,10 +200,7 @@ const App = () => {
     
     
     else  {
-    //   speak("Lisa is thinking...");
-    //   fetchAIResponse(command);
-    // }
-    window.parent.postMessage({ command: "scrollToPricing" }, "*");
+    window.parent.postMessage({ command: "scroll to pricing" }, "*");
     }
     //for searching through google....
     // else{
